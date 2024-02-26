@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using PocRestAPI.Data;
 using Serilog;
 
 var configuration = new ConfigurationBuilder()
@@ -19,6 +21,8 @@ try
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+    // switch for environment
+    builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
     builder.Host.UseSerilog((hostingContext, loggerConfiguration) => 
        loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration));
 
@@ -30,6 +34,8 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
+
+    // app.UseSerilogRequestLogging();  // to log ALL requests
 
     app.UseHttpsRedirection();
 
