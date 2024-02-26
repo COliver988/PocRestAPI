@@ -2,10 +2,10 @@
 
 namespace PocRestAPI.Models
 {
-    public class JsonOrder
+    public record JsonOrder
     {
-        // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
-        public class Attributes
+        // Root myDeserializedrecord = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+        public record Attributes
         {
             [JsonProperty("vendor-po")]
             public string VendorPo { get; set; }
@@ -23,13 +23,13 @@ namespace PocRestAPI.Models
             public ShippingDetails ShippingDetails { get; set; }
         }
 
-        public class Root
+        public record Root
         {
             public string Type { get; set; }
             public Attributes Attributes { get; set; }
         }
 
-        public class ShippingDetails
+        public record ShippingDetails
         {
             public string IOSS { get; set; }
             public string TrackingUrl { get; set; }
