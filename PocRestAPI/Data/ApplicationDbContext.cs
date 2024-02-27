@@ -12,6 +12,7 @@ namespace PocRestAPI.Data
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<LoggerData> LoggerData { get; set; }
+        // removed this model but leaving this in for future ref
+        // public DbSet<LoggerData> LoggerData { get; set; }
     }
 }
