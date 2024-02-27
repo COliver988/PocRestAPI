@@ -21,12 +21,36 @@ try
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+
     // switch for environment
     builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-    builder.Host.UseSerilog((hostingContext, loggerConfiguration) => 
+
+    // logging settings
+    builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
        loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration));
 
+    // app.UseSerilogRequestLogging();  // to log ALL requests
+
     var app = builder.Build();
+
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseExceptionHandler("/Error");
+        app.UseHsts();
+    }
+    else
+    {
+        app.UseDeveloperExceptionPage();
+        app.UseMigrationsEndPoint();
+    }
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        // DbInitializer.Initialize(context);
+    }
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
@@ -34,8 +58,6 @@ try
         app.UseSwagger();
         app.UseSwaggerUI();
     }
-
-    // app.UseSerilogRequestLogging();  // to log ALL requests
 
     app.UseHttpsRedirection();
 
